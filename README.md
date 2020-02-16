@@ -1,7 +1,7 @@
 # Listee Web
 
 This web client for listee currently runs on <https://pizza.bartolomey.me/>.
-It's a vuejs app currently using the v1 API of Listee <https://github.com/aix-pizza-time/listee-backend>
+It's a vuejs app currently using the v1 API of Listee <https://github.com/aix-pizza-time/listee-api>
 
 ## Running
 
