@@ -1,24 +1,17 @@
-# client
+# Listee Web
 
-## Project setup
-```
-npm install
-```
+This web client for listee currently runs on <https://pizza.bartolomey.me/>.
+It's a vuejs app currently using the v1 API of Listee <https://github.com/aix-pizza-time/listee-backend>
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Running
 
-### Compiles and minifies for production
 ```
-npm run build
-```
+yarn install
 
-### Lints and fixes files
+# For development
+yarn run serve 
+yarn run lint
+# For production
+yarn run build
+docker build -t ... ./
 ```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
