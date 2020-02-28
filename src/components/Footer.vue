@@ -17,10 +17,8 @@ footer {
     line-height: 2;
     padding: 0.5em;
     text-align: center;
-    background: #242424;
-    color: #ffffff;
     a {
-      color: #ffffff;
+      color: inherit;
     }
 }
 </style>

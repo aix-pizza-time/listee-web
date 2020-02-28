@@ -1,48 +1,41 @@
 <template>
-  <div id="app">
+  <v-app>
+    <v-app-bar
+      :clipped-left="false"
+      app
+      dark
+      flat
+      prominent
+    >
+      <v-toolbar-title class="display-1 font-weight-bold">Listee 🍕🍷</v-toolbar-title>
+    </v-app-bar>
+    <v-content>
+      <router-view></router-view>
+    </v-content>
+    <v-footer app dark>
+      <Footer></Footer>
+    </v-footer>
+  </v-app>
+  <!-- <div id="app">
     <Home class="home"></Home>
     <Footer></Footer>
-  </div>
+  </div> -->
 </template>
 
 <style lang="scss">
-* {
-  box-sizing: border-box;
-}
 #app {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 13px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #000000;
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  min-width: 100%;
-  min-height: 100%;
-  .home {
-    flex-grow: 1;
-  }
-}
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  min-width: 100%;
-  position: absolute;
-}
-html {
-  height: 100%;
+  // text-align: center;
 }
 </style>
 
 <script>
-import Home from '@/views/Home';
 import Footer from '@/components/Footer';
 export default {
   components: {
-    Home,
     Footer
   }
 };

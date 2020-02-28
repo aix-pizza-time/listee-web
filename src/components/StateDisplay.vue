@@ -1,48 +1,11 @@
 <template>
   <div class="state" v-if="this.display && this.hasErrors">
-    <div class="status getStatus" v-if="this.getStatus === 'failed'">
-      <span>
-        Could not get shopping list 🤔
-      </span>
-      <small>
-        You should probably tell us...🧐
-      </small>
+    <div class="type" v-for="error in this.errors" v-bind:key="error">
+      <Notification v-if="this[error] === 'failed'"
+        :text="this.codes[error].text"
+      ></Notification>
     </div>
-    <div class="status addFailed" v-if="this.addStatus === 'failed'">
-      <span>
-        Failed to add your entry to the list 🤔
-      </span>
-      <small>
-        You should probably tell us...🧐
-      </small>
-    </div>
-    <div class="status resetFailed" v-if="this.resetStatus === 'failed'">
-      <span>
-        Failed to reset the list 🤔
-      </span>
-      <small>
-        You should probably tell us...🧐
-      </small>
-    </div>
-    <div class="status commitFailed" v-if="this.commitStatus === 'failed'">
-      <span>
-        Failed to commit the list 🤔
-      </span>
-      <small>
-        You should probably tell us...🧐
-      </small>
-    </div>
-    <div class="status renameStatus" v-if="this.renameStatus === 'failed'">
-      <span>
-        Failed to rename the list 🤔
-      </span>
-      <small>
-        You should probably tell us...🧐
-      </small>
-    </div>
-    <button @click="close()">
-      <i class=material-icons>close</i>
-    </button>
+
   </div>
 </template>
 
@@ -64,6 +27,16 @@ export default {
     return {
       display: true,
       hasErrors: true,
+      errors: [
+        'renameStatus', 'commitStatus', 'resetStatus', 'addStatus', 'getStatus'
+      ],
+      codes: {
+        renameStatus: 'Konnte deinen Eintrag nicht umbenennen 🤔',
+        commitStatus:'Konnte die Liste nicht finalisieren 🤔',
+        resetStatus: 'Konnte die Liste nicht resetten 🤔',
+        addStatus: 'Konnte deinen Eintrag nicht hinzufügen 🤔',
+        getStatus: 'Konnte die Liste nicht finden 🤔'
+      }
     };
   },
   methods: {

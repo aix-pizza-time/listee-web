@@ -1,8 +1,14 @@
 <template>
   <div class="list">
     <h2 class="failed" v-if="getStatus === 'failed'">
-      <span>Irgendwas ist schiefgelaufen... 😤</span>
-      <small>Wir arbeiten so schnell wie möglich an einer Lösung 👨‍💻</small>
+      <Notification
+        :text="'Irgendwas ist schiefgelaufen... 😤'"
+        :note="'Wir arbeiten so schnell wie möglich an einer Lösung 👨‍💻'"
+      ></Notification>
+       <v-progress-circular
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
     </h2>
     <div v-else>
       <h2 v-if="this.list.length == 0">Momentan soll nichts gekauft werden 🙄</h2>
@@ -21,9 +27,13 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
+import Notification from '@/components/Notification.vue';
 
 export default {
   name: 'List',
+  components: {
+    Notification
+  },
   computed: {
     ...mapState({
       getStatus: state => state.list.getStatus,
@@ -57,6 +67,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-progress-circular--indeterminate {
+  text-align: center;
+  margin: 4em auto;
+  display: block;
+}
+
 .list {
   position: relative;
   width: 100%;
