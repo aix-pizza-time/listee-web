@@ -19,26 +19,19 @@
         </v-list-item-content>
       </v-list-item>
       <div v-else>
-        <v-list-item three-line v-for="item in list" :key="item.id">
+        <v-list-item three-line v-for="item in list" :key="item.id" @click="startEditing(item)">
           <v-list-item-content>
             <v-list-item-title class="title font-weight-bold" @click="startEditing(item)">
               {{item.entry}}
             </v-list-item-title>
-            <v-list-item-subtitle>
+            <v-list-item-subtitle @click="startEditing(item)">
               Hinzugefügt von: {{item.creator}}
             </v-list-item-subtitle>
-            <v-list-item-subtitle>
+            <v-list-item-subtitle @click="startEditing(item)">
               Preis: ~{{item.price}}
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        <!-- <div v-for="item in list" :key="item.id" class="list-item">
-          <input v-if="committed" disabled :value="item.entry" :id="item.id" class="label" />
-          <input v-else :value="item.entry" :id="item.id" @blur="renameEntry" class="label" />
-          <button v-if="!committed" @click="deleteEntry(item.id)">
-            <i class="material-icons">close</i>
-          </button>
-        </div> -->
       </div>
     </v-card>
     <v-bottom-sheet v-model="currentlyEditing" persistent>
@@ -110,6 +103,7 @@ export default {
       deleteStatus: state => state.list.deleteStatus,
       renameStatus: state => state.list.renameStatus,
       resetState: state => state.list.resetState,
+      nextState: state => state.list.nextState,
     }),
     ...mapGetters('list', {
       list: 'list',
@@ -142,9 +136,6 @@ export default {
   created() {
     this.$store.dispatch('list/getList');
   },
-  watch: {
-
-  }
 };
 </script>
 
