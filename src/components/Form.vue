@@ -1,20 +1,28 @@
 <template>
-  <v-form>
-    <v-autocomplete
+  <v-form ref="form">
+    <v-combobox
+      ref="ingredient"
       :clearable="true"
       light
       rounded
-      v-model="newEntry"
+      v-model="ingredient"
       outlined
+      :rules="[() => !!ingredient || 'Nix gibbet nicht!']"
       label="Zutat, Extrawünsche, Krimskrams"
-    ></v-autocomplete>
+      :items="this.learned"
+      prepend-inner-icon="restaurant"
+    ></v-combobox>
     <v-text-field
+      ref="price"
       label="Preis"
       placeholder=""
       outlined
+      :rules="[v => /^[0-9]*(\.[0-9]*)?$/.test(v) || 'Bitte einen gültigen (nicht-negativen) Preis angeben']"
       rounded
+      v-model="price"
+      prepend-inner-icon="euro_symbol"
     ></v-text-field>
-    <v-btn rounded depressed color="primary" block large @click="add(newEntry)">
+    <v-btn rounded color="primary" block large @click="submit()">
       <v-icon>add_shopping_cart</v-icon>Zur Liste hinzufügen
     </v-btn>
   </v-form>
@@ -27,31 +35,49 @@ export default {
   name: 'Form',
   data: () => {
     return {
-      newEntry: '',
-      eventDisplay: false
+      ingredient: null,
+      price: null,
+      formHasErrors: false,
     };
   },
   computed: {
+    form(){
+      return {
+        ingredient: this.ingredient,
+        price: this.price
+      };
+    },
     ...mapState({
       addStatus: state => state.list.addStatus,
       getLearnedStatus: state => state.list.getLearnedStatus,
     }),
-    ...mapGetters({
+    ...mapGetters('learned', {
       learned: 'learned',
     })
   },
   methods: {
-    add(entry) {
-      this.newEntry = '';
-      this.$store.dispatch('list/addEntry', { entry });
+    submit() {
+      this.formHasErrors = false;
+      Object.keys(this.form).forEach(f => {
+        if (!this.form[f]) this.formHasErrors = true;
+
+        this.$refs[f].validate(true);
+      });
+      this.add();
     },
-    // commit() {
-    //   this.$store.dispatch('list/commitList');
-    // },
-    reset() {
-      this.$store.dispatch('list/resetList');
-    }
-  }
+    add() {
+      if(this.formHasErrors) return;
+      let newEntry = {
+        'entry': this.ingredient,
+        'creator': 'anonymous',
+        'price': this.price
+      };
+      this.$store.dispatch('list/addEntry', newEntry);
+    },
+  },
+  created() {
+    this.$store.dispatch('learned/getLearned');
+  },
 };
 </script>
 
