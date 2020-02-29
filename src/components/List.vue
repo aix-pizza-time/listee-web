@@ -10,18 +10,82 @@
         color="primary"
       ></v-progress-circular>
     </h2>
-    <div v-else>
-      <h2 v-if="this.list.length == 0">Momentan soll nichts gekauft werden 🙄</h2>
+    <v-card outlined flat v-else>
+      <v-list-item v-if="this.list.length == 0">
+        <v-list-item-content>
+          <v-list-item-title class="text-center">
+            Momentan soll nichts gekauft werden 🙄
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
       <div v-else>
-        <div v-for="item in list" :key="item.id" class="list-item">
+        <v-list-item three-line v-for="item in list" :key="item.id">
+          <v-list-item-content>
+            <v-list-item-title class="title font-weight-bold" @click="startEditing(item)">
+              {{item.entry}}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              Hinzugefügt von: {{item.creator}}
+            </v-list-item-subtitle>
+            <v-list-item-subtitle>
+              Preis: ~{{item.price}}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <!-- <div v-for="item in list" :key="item.id" class="list-item">
           <input v-if="committed" disabled :value="item.entry" :id="item.id" class="label" />
           <input v-else :value="item.entry" :id="item.id" @blur="renameEntry" class="label" />
           <button v-if="!committed" @click="deleteEntry(item.id)">
             <i class="material-icons">close</i>
           </button>
-        </div>
+        </div> -->
       </div>
-    </div>
+    </v-card>
+    <v-bottom-sheet v-model="currentlyEditing" persistent>
+      <v-sheet>
+        <v-form v-if="editedEntry !== null" class="bottom-form">
+          <v-text-field
+            v-model="editedEntry.entry"
+            placeholder="Zutat"
+            outlined
+            rounded
+            label="Zutat"
+            prepend-inner-icon="restaurant"
+          ></v-text-field>
+          <v-text-field
+            v-model="editedEntry.price"
+            placeholder="Preis"
+            outlined
+            rounded
+            label="Preis"
+            prepend-inner-icon="euro_symbol"
+          ></v-text-field>
+          <v-text-field
+            v-model="editedEntry.creator"
+            disabled
+            placeholder="Hinzugefügt von"
+            outlined
+            rounded
+            label="Hinzugefügt von"
+            prepend-inner-icon="person"
+            dense
+          >
+          </v-text-field>
+          <v-container>
+            <v-row :justify="'start'" no-gutter>
+              <v-col cols="12" sm="8">
+                <v-btn rounded dark large color="red" @click="deleteItem">
+                  <v-icon>delete</v-icon> Löschen</v-btn>
+              </v-col>
+              <v-col cols="12" sm="4" >
+                <v-btn @click="saveChanges" block rounded large color="success" dark>
+                  <v-icon>save</v-icon>Speichern &amp; Schließen</v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-form>
+      </v-sheet>
+    </v-bottom-sheet>
   </div>
 </template>
 
@@ -34,34 +98,52 @@ export default {
   components: {
     Notification
   },
+  data () {
+    return {
+      editedEntry: null,
+      currentlyEditing: false,
+    };
+  },
   computed: {
     ...mapState({
       getStatus: state => state.list.getStatus,
       deleteStatus: state => state.list.deleteStatus,
       renameStatus: state => state.list.renameStatus,
       resetState: state => state.list.resetState,
-      // committed: state => state.list.committed
     }),
     ...mapGetters('list', {
       list: 'list',
     }),
   },
   methods: {
-    deleteEntry(id){
-      this.$store.dispatch('list/deleteEntry', {id});
+    deleteItem(){
+      if(this.editedEntry == '') return;
+
+      this.$store.dispatch('list/deleteEntry', {id: this.editedEntry.id});
     },
-    renameEntry(e){
-      // console.log(name);
-      if(this.committed){
-        return;
-      }
-      let id = e.target.id;
-      let entry = e.target.value;
-      this.$store.dispatch('list/renameEntry', {id, entry});
+    startEditing(item){
+      this.editedEntry = item;
+      this.currentlyEditing = true;
+    },
+    saveChanges(){
+      if(this.editedEntry == '') return;
+      console.log(this.editedEntry);
+      let newEntry = {
+        id: this.editedEntry.id,
+        entry: this.editedEntry.entry,
+        creator: this.editedEntry.creator,
+        price: this.editedEntry.price,
+      };
+      this.$store.dispatch('list/changeEntry', newEntry);
+      this.currentlyEditing = false;
+      this.editedEntry = null;
     }
   },
   created() {
     this.$store.dispatch('list/getList');
+  },
+  watch: {
+
   }
 };
 </script>
@@ -75,64 +157,15 @@ export default {
 
 .list {
   position: relative;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2em;
-  // .list-item {
-    // &:not(:last-child) {
-    //   &::after {
-    //     content: ' ';
-    //     display: block;
-    //     width: 80%;
-    //     margin: 0 auto;
-    //     border-bottom: solid 1px #ccc;
-    //   }
-    // }
-  // }
-}
-.list-item {
   max-width: 1024px;
-  margin: 0 auto;
-  padding: 0 2em;
   width: 100%;
-  display: flex;
-  .label {
-    flex-grow: 1;
-    font-size: 1.5em;
-    font-weight: 700;
-    border: none;
-    background: none;
-    outline: none;
-    min-height: 48px;
-    &:disabled {
-      color: #424242;
-    }
-  }
-  button {
-    background: none;
-    border: none;
-    outline: none;
-    border-radius: 50px;
-    height: 48px;
-    width: 48px;
-    transition: background-color ease-out 0.4s;
-    line-height: 1;
-    font-size: 1em;
-    &:hover, &:active {
-      transition: background-color ease-out 0.1s;
-      background-color: #ddd;
-    }
-    i {
-      vertical-align: middle;
-    }
-  }
+  margin: 0 auto;
+  padding: 2em 1em;
 }
-.failed {
-  span {
-    display: block;
-  }
-  small {
-    display: block;
-  }
+.bottom-form {
+  padding: 2em;
+  max-width: 1024px;
+  width: 100%;
+  margin: 0 auto
 }
 </style>
