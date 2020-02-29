@@ -13,10 +13,10 @@ export default {
 
 <style lang="scss" scoped>
 footer {
-    width: 100%;
-    line-height: 2;
+    // width: 100%;
+    // line-height: 2;
     padding: 0.5em;
-    text-align: center;
+    // text-align: center;
     a {
       color: inherit;
     }
