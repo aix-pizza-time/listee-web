@@ -13,22 +13,18 @@ Array.prototype.findIndexById = function (id) {
 
 const state = {
   list: [],
-  learned: [],
   getListStatus: null,
-  getLearnedStatus: null,
   addStatus: null,
   deleteStatus: null,
   renameStatus: null,
   commitStatus: null,
   resetStatus: null,
+  nextStatus: null,
 };
 
 const getters = {
   list: (state) => {
     return state.list;
-  },
-  learned: (state) => {
-    return state.learned;
   },
 };
 
@@ -44,20 +40,9 @@ const actions = {
       });
   },
 
-  getLearned({commit}) {
-    axios.get(`${host}/api/v2/learn`)
-      .then(({data}) => {
-        commit('setGetLearnedStatus', 'successful');
-        commit('setList', { learned: data });
-      }).catch(() => {
-        commit('setGetLearnedStatus', 'failed');
-        commit('setList', { learned: [] });
-      });
-  },
-
-  addEntry({commit}, {item, creator = 'anonymous', price = -1}) {
+  addEntry({commit}, {entry, creator = 'anonymous', price = 0}) {
     axios.post(`${host}/api/v2/list/item`, {
-      'entry': item,
+      'entry': entry,
       'creator': creator,
       'price': price
     })
@@ -65,7 +50,7 @@ const actions = {
         commit('setAddStatus', 'successful');
         commit('pushEntryToList', data);
         commit('pushEntryToLearned', {
-          'ingredient': item
+          'ingredient': entry
         });
       }).catch(() => {
         commit('setAddStatus', 'failed');
@@ -119,15 +104,24 @@ const actions = {
         commit('setList', { list: prevList });
       });
   },
+
+  nextList({state, commit}) {
+    const prevList = [...state.list];
+    commit('setList', { list: [] });
+    axios.get(`${host}/api/v2/next`)
+      .then(() => {
+        commit('setNextStatus', 'successful');
+      }).catch(() => {
+        commit('setNextStatus', 'failed');
+        // Roll back
+        commit('setList', { list: prevList });
+      });
+  },
 };
 
 const mutations = {
   pushEntryToList (state, {id, entry, creator, price}) {
     state.list.push({'id': id, 'entry': entry, 'creator': creator, 'price': price});
-  },
-
-  pushEntryToLearned (state, {ingredient}) {
-    state.learned.push(ingredient);
   },
 
   setEntry (state, {id, entry, creator, price}) {
@@ -149,9 +143,6 @@ const mutations = {
   setGetListStatus (state, status){
     state.getListStatus = status;
   },
-  setGetLearnedStatus (state, status){
-    state.getLearnedStatus = status;
-  },
   setAddStatus (state, status){
     state.addStatus = status;
   },
@@ -164,7 +155,9 @@ const mutations = {
   setResetStatus (state, status){
     state.resetStatus = status;
   },
-
+  setNextStatus (state, status){
+    state.nextStatus = status;
+  },
   // setCommitted (state, {committed}){
   //   state.committed = committed;
   // }
