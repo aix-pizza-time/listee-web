@@ -1,12 +1,12 @@
 <template>
   <div class="form">
     <router-link to="/">
-      <v-btn id="back" absolute dark fab top right small color="primary">
-        <v-icon>arrow_back</v-icon>
+      <v-btn id="back" absolute fab top right small color="secondary">
+        <v-icon color="black">arrow_back</v-icon>
       </v-btn>
     </router-link>
     <v-sheet height="4em"></v-sheet>
-    <h1 class="display-4">Zutat hinzufügen</h1>
+    <h1 class="display-3">Zutat hinzufügen</h1>
     <v-sheet height="2em"></v-sheet>
     <Form></Form>
   </div>
@@ -27,6 +27,9 @@ h1 {
   margin-bottom: 16px;
 }
 .form {
+  margin: 0 auto;
+  max-width: 1024px;
+  width: 100%;
   padding: 2em;
 }
 #back {
