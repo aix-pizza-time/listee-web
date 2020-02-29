@@ -73,6 +73,7 @@ export default {
         'price': this.price
       };
       this.$store.dispatch('list/addEntry', newEntry);
+      this.$store.dispatch('learned/learn', this.ingredient);
     },
   },
   created() {

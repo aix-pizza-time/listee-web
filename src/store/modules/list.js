@@ -30,6 +30,7 @@ const getters = {
 
 const actions = {
   getList({commit}) {
+    commit('setGetListStatus', 'pending');
     axios.get(`${host}/api/v2/list`)
       .then(({data}) => {
         commit('setGetListStatus', 'successful');
@@ -41,6 +42,7 @@ const actions = {
   },
 
   addEntry({commit}, {entry, creator = 'anonymous', price = 0}) {
+    commit('setAddStatus', 'pending');
     axios.post(`${host}/api/v2/list/item`, {
       'entry': entry,
       'creator': creator,
@@ -49,9 +51,6 @@ const actions = {
       .then(({data}) => {
         commit('setAddStatus', 'successful');
         commit('pushEntryToList', data);
-        commit('pushEntryToLearned', {
-          'ingredient': entry
-        });
       }).catch(() => {
         commit('setAddStatus', 'failed');
       });
@@ -59,6 +58,7 @@ const actions = {
 
   changeEntry({state, commit}, {id, entry, creator, price}) {
     const prevList = [...state.list];
+    commit('setRenameStatus', 'pending');
     commit('setEntry', {
       'id': id,
       'entry': entry,
@@ -72,9 +72,6 @@ const actions = {
     })
       .then(() => {
         commit('setRenameStatus', 'successful');
-        commit('pushEntryToLearned', {
-          'ingredient': entry
-        });
       }).catch(() => {
         commit('setRenameStatus', 'failed');
         // Roll back
@@ -83,6 +80,7 @@ const actions = {
   },
 
   deleteEntry({commit}, {id}) {
+    commit('setDeleteStatus', 'pending');
     axios.delete(`${host}/api/v2/list/item/${id}`)
       .then(() => {
         commit('setDeleteStatus', 'successful');
@@ -95,6 +93,7 @@ const actions = {
   resetList({state, commit}) {
     const prevList = [...state.list];
     commit('setList', { list: [] });
+    commit('setResetStatus', 'pending');
     axios.delete(`${host}/api/v2/list`)
       .then(() => {
         commit('setResetStatus', 'successful');
@@ -107,6 +106,7 @@ const actions = {
 
   nextList({state, commit}) {
     const prevList = [...state.list];
+    commit('pending', 'successful');
     commit('setList', { list: [] });
     axios.get(`${host}/api/v2/next`)
       .then(() => {

@@ -25,11 +25,14 @@ const actions = {
         commit('setLearned', { learned: [] });
       });
   },
+  learn({commit}, {ingredient}) {
+    commit('pushEntryToLearned', {'ingredient': ingredient});
+  }
 };
 
 const mutations = {
   pushEntryToLearned (state, {ingredient}) {
-    state.learned.push(ingredient);
+    if(!state.learned.includes(ingredient)) state.learned.push(ingredient);
   },
 
   setLearned (state, {learned}) {

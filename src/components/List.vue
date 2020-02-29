@@ -28,7 +28,7 @@
               Hinzugefügt von: {{item.creator}}
             </v-list-item-subtitle>
             <v-list-item-subtitle @click="startEditing(item)">
-              Preis: ~{{item.price}}
+              Preis: {{item.price}} &euro;
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -114,6 +114,8 @@ export default {
       if(this.editedEntry == '') return;
 
       this.$store.dispatch('list/deleteEntry', {id: this.editedEntry.id});
+      this.editedEntry = null;
+      this.currentlyEditing = false;
     },
     startEditing(item){
       this.editedEntry = item;
@@ -121,7 +123,6 @@ export default {
     },
     saveChanges(){
       if(this.editedEntry == '') return;
-      console.log(this.editedEntry);
       let newEntry = {
         id: this.editedEntry.id,
         entry: this.editedEntry.entry,
