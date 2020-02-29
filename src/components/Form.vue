@@ -1,25 +1,27 @@
 <template>
   <v-form>
     <v-autocomplete
-      clearable="true"
+      :clearable="true"
       light
       rounded
       v-model="newEntry"
-      filled
+      outlined
       label="Zutat, Extrawünsche, Krimskrams"
     ></v-autocomplete>
+    <v-text-field
+      label="Preis"
+      placeholder=""
+      outlined
+      rounded
+    ></v-text-field>
     <v-btn rounded depressed color="primary" block large @click="add(newEntry)">
       <v-icon>add_shopping_cart</v-icon>Zur Liste hinzufügen
     </v-btn>
-    <div class="spacer"></div>
-    <!-- <v-btn rounded depressed color="error" block normal @click="reset()(newEntry)">
-      <v-icon>delete_outline</v-icon>Liste zurücksetzen
-    </v-btn> -->
   </v-form>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
   components: {},
   name: 'Form',
@@ -32,8 +34,10 @@ export default {
   computed: {
     ...mapState({
       addStatus: state => state.list.addStatus,
-      resetStatus: state => state.list.resetStatus
-      // commitStatus: state => state.list.commitStatus
+      getLearnedStatus: state => state.list.getLearnedStatus,
+    }),
+    ...mapGetters({
+      learned: 'learned',
     })
   },
   methods: {
@@ -52,10 +56,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form {
-  padding: 2em;
-}
-
 button {
   margin: 1em 0;
 }
