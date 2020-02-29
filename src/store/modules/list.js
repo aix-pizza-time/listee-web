@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const host = http://localhost:3000';
-const host = '';
+const host = 'https://pizza.bartolomey.me';
 
 Array.prototype.findIndexById = function (id) {
   if (typeof id !== 'string') {
@@ -11,77 +11,94 @@ Array.prototype.findIndexById = function (id) {
   }
 };
 
-
 const state = {
-  list: {},
-  getStatus: null,
+  list: [],
+  learned: [],
+  getListStatus: null,
+  getLearnedStatus: null,
   addStatus: null,
   deleteStatus: null,
   renameStatus: null,
   commitStatus: null,
   resetStatus: null,
-  committed: false,
 };
 
 const getters = {
   list: (state) => {
     return state.list;
   },
-  committed: (state) => {
-    return state.committed;
-  }
+  learned: (state) => {
+    return state.learned;
+  },
 };
 
 const actions = {
   getList({commit}) {
-    axios.get(`${host}/api/list`)
+    axios.get(`${host}/api/v2/list`)
       .then(({data}) => {
-        commit('setGetStatus', 'successful');
-        commit('setList', { list: data.currentList });
+        commit('setGetListStatus', 'successful');
+        commit('setList', { list: data });
       }).catch(() => {
-        commit('setGetStatus', 'failed');
+        commit('setGetListStatus', 'failed');
         commit('setList', { list: [] });
       });
   },
 
-  // getCommitState({commit}) {
-  //   axios.get(`${host}/api/committed`)
-  //     .then(({data}) => {
-  //       commit('setGetStatus', 'successful');
-  //       commit('setCommitted', {committed: data.committed});
-  //     }).catch(() => {
-  //       commit('setGetStatus', 'failed');
-  //       commit('setCommitted', false);
-  //     });
-  // },
+  getLearned({commit}) {
+    axios.get(`${host}/api/v2/learn`)
+      .then(({data}) => {
+        commit('setGetLearnedStatus', 'successful');
+        commit('setList', { learned: data });
+      }).catch(() => {
+        commit('setGetLearnedStatus', 'failed');
+        commit('setList', { learned: [] });
+      });
+  },
 
-  addEntry({commit}, item) {
-    // const prevList = [...state.items];
-    axios.post(`${host}/api/add`, item)
+  addEntry({commit}, {item, creator = 'anonymous', price = -1}) {
+    axios.post(`${host}/api/v2/list/item`, {
+      'entry': item,
+      'creator': creator,
+      'price': price
+    })
       .then(({data}) => {
         commit('setAddStatus', 'successful');
-        commit('pushEntryToList', data['newEntry']);
+        commit('pushEntryToList', data);
+        commit('pushEntryToLearned', {
+          'ingredient': item
+        });
       }).catch(() => {
         commit('setAddStatus', 'failed');
       });
   },
 
-  renameEntry({state, commit}, {id, entry}) {
+  changeEntry({state, commit}, {id, entry, creator, price}) {
     const prevList = [...state.list];
-    commit('setEntry', {id, entry});
-    axios.post(`${host}/api/rename/${id}`, {'entry': entry})
+    commit('setEntry', {
+      'id': id,
+      'entry': entry,
+      'creator': creator,
+      'price': price,
+    });
+    axios.put(`${host}/api/v2/list/item/${id}`, {
+      'entry': entry,
+      'creator': creator,
+      'price': price
+    })
       .then(() => {
         commit('setRenameStatus', 'successful');
+        commit('pushEntryToLearned', {
+          'ingredient': entry
+        });
       }).catch(() => {
         commit('setRenameStatus', 'failed');
         // Roll back
-        commit('setList', { list: prevList });
+        commit('setList', { 'list': prevList });
       });
   },
 
   deleteEntry({commit}, {id}) {
-    // const prevList = [...state.list];
-    axios.delete(`${host}/api/delete/${id}`)
+    axios.delete(`${host}/api/v2/list/item/${id}`)
       .then(() => {
         commit('setDeleteStatus', 'successful');
         commit('removeEntry', {id});
@@ -93,40 +110,29 @@ const actions = {
   resetList({state, commit}) {
     const prevList = [...state.list];
     commit('setList', { list: [] });
-    axios.post(`${host}/api/reset`, {})
+    axios.delete(`${host}/api/v2/list`)
       .then(() => {
         commit('setResetStatus', 'successful');
-        commit('setCommitted', false);
       }).catch(() => {
         commit('setResetStatus', 'failed');
         // Roll back
         commit('setList', { list: prevList });
       });
   },
-
-  // commitList({commit}) {
-  //   // const prevList = [...state.list];
-  //   // commit('setList', { list: {} });
-  //   axios.post(`${host}/api/commit`, {})
-  //     .then(() => {
-  //       commit('setResetStatus', 'successful');
-  //       commit('setCommitted', {committed: true});
-  //     }).catch(() => {
-  //       commit('setResetStatus', 'failed');
-  //       // Roll back
-  //       commit('setCommitted', {committed: false});
-  //     });
-  // }
 };
 
 const mutations = {
-  pushEntryToList (state, {id, entry}) {
-    state.list.push({id: id, entry: entry});
+  pushEntryToList (state, {id, entry, creator, price}) {
+    state.list.push({'id': id, 'entry': entry, 'creator': creator, 'price': price});
   },
 
-  setEntry (state, {id, entry}) {
+  pushEntryToLearned (state, {ingredient}) {
+    state.learned.push(ingredient);
+  },
+
+  setEntry (state, {id, entry, creator, price}) {
     let _id = state.list.findIndexById(id);
-    state.list.splice(_id, 1, {id: id, entry: entry});
+    state.list.splice(_id, 1, {'id': id, 'entry': entry, 'creator': creator, 'price': price});
   },
 
   removeEntry (state, {id}){
@@ -137,18 +143,20 @@ const mutations = {
   setList (state, {list}) {
     state.list = list;
   },
-
-  setGetStatus (state, status){
-    state.getStatus = status;
+  setLearned (state, {learned}) {
+    state.list = learned;
+  },
+  setGetListStatus (state, status){
+    state.getListStatus = status;
+  },
+  setGetLearnedStatus (state, status){
+    state.getLearnedStatus = status;
   },
   setAddStatus (state, status){
     state.addStatus = status;
   },
   setRenameStatus (state, status){
     state.renameStatus = status;
-  },
-  setCommitStatus (state, status){
-    state.commitStatus = status;
   },
   setDeleteStatus (state, status){
     state.deleteStatus = status;
