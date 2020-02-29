@@ -8,14 +8,14 @@
         v-model="fab"
         bottom
         right
-        :direction="direction"
-        :open-on-hover="hover"
-        :transition="transition"
+        :direction="'top'"
+        :open-on-hover="true"
+        :transition="'slide-y-reverse-transition'"
       >
         <template v-slot:activator>
           <router-link to="/add">
-            <v-btn v-model="fab" dark fab color="primary">
-              <v-icon>add</v-icon>
+            <v-btn v-model="fab" dark fab color="secondary">
+              <v-icon color="black">add</v-icon>
             </v-btn>
           </router-link>
         </template>
@@ -38,14 +38,11 @@ export default {
     StateDisplay
   },
   data: () => ({
-    direction: 'top',
     fab: false,
     fling: false,
     hover: true,
     tabs: null,
-    right: true,
-    bottom: true,
-    transition: 'slide-y-reverse-transition'
+    transition: 'slide-y-transition'
   }),
   computed: {
     activeFab() {
@@ -65,17 +62,7 @@ export default {
 </script>
 
 <style lang="scss">
-.home {
-  display: flex;
-  flex-direction: column;
-}
-
-.list {
-  flex-grow: 1;
-}
-
 #create .v-speed-dial {
-  margin-bottom: -3em;
   a:link {
     text-decoration: none;
     color: inherit;
