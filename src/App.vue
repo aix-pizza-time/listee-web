@@ -6,13 +6,14 @@
       dark
       flat
       prominent
+      color="primary"
     >
       <v-toolbar-title class="display-1 font-weight-bold">Listee 🍕🍷</v-toolbar-title>
     </v-app-bar>
     <v-content>
       <router-view></router-view>
     </v-content>
-    <v-footer app dark>
+    <v-footer :absolute="true" app dark color="primary">
       <Footer></Footer>
     </v-footer>
   </v-app>
