@@ -3,10 +3,13 @@ module.exports = {
     'vuetify'
   ],
 
-  pwa: {
-    msTileColor: '#191919',
-    manifestOptions: {
-      background_color: '#191919'
+  "pwa": {
+    "name": 'Listee',
+    "short_name": "Listee",
+    "themeColor": "#191919",
+    "msTileColor": "#191919",
+    "manifestOptions": {
+      "background_color": "#191919"
     }
   }
 };

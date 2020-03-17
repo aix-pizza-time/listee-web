@@ -14,8 +14,8 @@ spec:
         app: listee-web
     spec:
       containers:
-      - name: listee-api
-        image: registry.git.rwth-aachen.de/aix-pizza-time/listee-web:2.0.1
+      - name: listee-web
+        image: registry.git.rwth-aachen.de/aix-pizza-time/listee-web:2.0.2
         ports:
         - containerPort: 80
         imagePullPolicy: Always
