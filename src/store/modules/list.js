@@ -106,9 +106,9 @@ const actions = {
 
   nextList({state, commit}) {
     const prevList = [...state.list];
-    commit('pending', 'successful');
+    // commit('pending', 'successful');
     commit('setList', { list: [] });
-    axios.get(`${host}/api/v2/next`)
+    axios.post(`${host}/api/v2/next`)
       .then(() => {
         commit('setNextStatus', 'successful');
       }).catch(() => {

@@ -77,14 +77,15 @@
         v-model="fab"
         bottom
         right
+        dark
         :direction="'top'"
         :open-on-hover="true"
         :transition="'slide-y-reverse-transition'"
       >
         <template v-slot:activator>
           <router-link to="/add">
-            <v-btn v-model="fab" dark fab color="secondary">
-              <v-icon color="black">add</v-icon>
+            <v-btn v-model="fab" dark fab>
+              <v-icon>add</v-icon>
             </v-btn>
           </router-link>
         </template>
@@ -145,7 +146,7 @@ export default {
     },
     nextList(){
       // TODO
-      // this.$store.dispatch('list/resetList');
+      this.$store.dispatch('list/nextList');
       this.nextDialog = false;
     },
   }

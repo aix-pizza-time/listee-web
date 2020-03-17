@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: web
+  name: listee-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: listee-web
+  template:
+    metadata:
+      labels:
+        app: listee-web
+    spec:
+      containers:
+      - name: listee-api
+        image: registry.git.rwth-aachen.de/aix-pizza-time/listee-web:2.0.1
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+      imagePullSecrets:
+      - name: gitlab
+      restartPolicy: Always

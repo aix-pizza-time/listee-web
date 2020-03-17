@@ -24,9 +24,15 @@
 </template>
 
 <style lang="scss">
+@import '@/sass/variables.scss';
+
+html {
+  overflow-y: hidden !important;
+}
+
 #app {
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
+  // font-family: 'Roboto', sans-serif;
+  // font-size: 1.125rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   // text-align: center;

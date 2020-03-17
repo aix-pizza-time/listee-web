@@ -6,15 +6,14 @@
       :query="true"
     ></v-progress-linear>
     <router-link to="/">
-      <v-btn id="back" absolute fab top right small color="secondary">
-        <v-icon color="black">arrow_back</v-icon>
+      <v-btn id="back" absolute fab top right small dark>
+        <v-icon>arrow_back</v-icon>
       </v-btn>
     </router-link>
     <div class="container">
       <v-sheet height="4em"></v-sheet>
       <h1 class="display-3">Zutat hinzufügen</h1>
       <v-sheet height="2em"></v-sheet>
-
       <Form></Form>
     </div>
     <v-snackbar

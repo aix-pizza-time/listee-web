@@ -10,7 +10,7 @@
         color="primary"
       ></v-progress-circular>
     </h2>
-    <v-card outlined flat v-else>
+    <v-card class="inner-list" elevation="12" v-else>
       <v-list-item v-if="this.list.length == 0">
         <v-list-item-content>
           <v-list-item-title class="text-center">
@@ -34,7 +34,7 @@
         </v-list-item>
       </div>
     </v-card>
-    <v-bottom-sheet v-model="currentlyEditing" persistent>
+    <v-bottom-sheet v-model="currentlyEditing">
       <v-sheet>
         <v-form v-if="editedEntry !== null" class="bottom-form">
           <v-text-field
@@ -152,12 +152,16 @@ export default {
   max-width: 1024px;
   width: 100%;
   margin: 0 auto;
-  padding: 2em 1em;
+  padding: 0 1em 2em;
 }
 .bottom-form {
   padding: 2em;
   max-width: 1024px;
   width: 100%;
   margin: 0 auto
+}
+
+.inner-list {
+  padding: 2em;
 }
 </style>

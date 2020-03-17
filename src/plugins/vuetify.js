@@ -21,9 +21,9 @@ export default new Vuetify({
       //   warning: '#FFC107'
       // },
       light: {
-        primary: '#0336FF',
-        secondary: '#FFDE03',
-        accent: '#FF0266',
+        primary: '#212121',
+        secondary: '#212121',
+        accent: '#EF6C00',
         error: '#FF5252',
         info: '#2196F3',
         success: '#4CAF50',

@@ -1,7 +1,7 @@
 <template>
   <footer>
-      Gebaut von <a href="https://git.rwth-aachen.de/zoomoid/" target="_blank">Alexander
-      Bartolomey</a> mit viel <span style="color: red">❤️</span> und noch mehr 🍕!
+      🍕 <a href="https://github.com/aix-pizza-time/listee-web/" target="_blank">aix-pizza-time</a>
+      <!-- <span style="color: red">❤️</span> und noch mehr 🍕! -->
   </footer>
 </template>
 
