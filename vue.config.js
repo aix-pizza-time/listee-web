@@ -49,6 +49,5 @@ module.exports = {
         "density": "4.0"
       }
     ],
-    workboxPluginMode: 'InjectManifest'
   }
 };
