@@ -3,15 +3,20 @@ kind: Deployment
 metadata:
   namespace: web
   name: listee-web
+  labels:
+    app: listee
+    svc: web
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: listee-web
+      app: listee
+      svc: web
   template:
     metadata:
       labels:
-        app: listee-web
+        app: listee
+        svc: web
     spec:
       containers:
       - name: listee-web
@@ -19,6 +24,10 @@ spec:
         ports:
         - containerPort: 80
         imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: "200m"
+            memory: "100Mi"
       imagePullSecrets:
       - name: gitlab
       restartPolicy: Always

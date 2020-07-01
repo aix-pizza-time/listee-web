@@ -3,9 +3,13 @@ kind: Service
 metadata:
   namespace: web
   name: listee-web
+  labels:
+    app: listee
+    svc: web
 spec:
   selector:
-    app: listee-web
+    app: listee
+    svc: web
   ports:
   - port: 8081
     targetPort: 80
